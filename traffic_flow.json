@@ -1,0 +1,18 @@
+{
+    "20": {
+        "north_to_south": 2,
+        "south_to_north": 0
+    },
+    "109": {
+        "north_to_south": 9,
+        "south_to_north": 0
+    },
+    "198": {
+        "north_to_south": 6,
+        "south_to_north": 2
+    },
+    "287": {
+        "north_to_south": 10,
+        "south_to_north": 3
+    }
+}
