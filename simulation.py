@@ -34,33 +34,54 @@ def start_simulation():
 
     return traffic_flow
 
+down = {}
+up = {}
 def analyze_traffic(step):
     global current_green_count_NTOS, current_green_count_STON, previous_phase, vehiclesNorthToSouth, vehiclesSouthToNorth, green_light_vehicle_counts
     junction_ids = traci.trafficlight.getIDList() 
+    global down, up
 
     vehicle_ids = traci.vehicle.getIDList()
 
-    # Track entry time for new vehicles
+    line_1 = 160
+    line_2 = 90
+
     for vehicle_id in vehicle_ids:
-        if vehicle_id not in vehicle_entry_times:
-            # New vehicle, log its entry time
-            vehicle_entry_times[vehicle_id] = step
-            # print(f"Vehicle {vehicle_id} entered at time {step}.")
+        vehicle_position = traci.vehicle.getPosition(vehicle_id)
+        lane_id = traci.vehicle.getLaneID(vehicle_id)
+        if vehicle_position[1] <= line_1 and vehicle_id not in down and (lane_id == "north_to_center_0" or lane_id == "north_to_center_1"):
+            down[vehicle_id] = {"start": step}
+        if vehicle_id in down:
+            if vehicle_position[1] <= line_2 and (lane_id == "center_to_south_0" or lane_id == "center_to_south_1"):
+                down[vehicle_id]["end"] = step
 
-    vehicles_to_remove = []  
+        if vehicle_position[1] >= line_2 and vehicle_id not in up and (lane_id == "south_to_center_0" or lane_id == "south_to_center_1"):
+            up[vehicle_id] = {"start": step}
+        if vehicle_id in up:
+            if vehicle_position[1] >= line_1 and (lane_id == "center_to_north_0" or lane_id == "center_to_north_1"):
+                up[vehicle_id]["end"] = step
 
-    for vehicle_id in list(vehicle_entry_times.keys()):  
-        if vehicle_id not in vehicle_ids:
-            exit_time = step
-            entry_time = vehicle_entry_times.pop(vehicle_id)
-            travel_time = exit_time - entry_time
-            # print(f"Vehicle {vehicle_id} exited at time {exit_time}. Travel time: {travel_time} seconds.")
-            vehicles_to_remove.append(vehicle_id)
 
-    # Now that the iteration is done, remove the vehicles
-    for vehicle_id in vehicles_to_remove:
-        if vehicle_id in vehicle_entry_times:
-            del vehicle_entry_times[vehicle_id]
+    # Track entry time for new vehicles
+    # for vehicle_id in vehicle_ids:
+    #     if vehicle_id not in vehicle_entry_times:
+    #         # New vehicle, log its entry time
+    #         vehicle_entry_times[vehicle_id] = step
+    #         # print(f"Vehicle {vehicle_id} entered at time {step}.")
+
+    # vehicles_to_remove = []  
+
+    # for vehicle_id in list(vehicle_entry_times.keys()):  
+    #     if vehicle_id not in vehicle_ids:
+    #         exit_time = step
+    #         entry_time = vehicle_entry_times.pop(vehicle_id)
+    #         travel_time = exit_time - entry_time
+    #         # print(f"Vehicle {vehicle_id} exited at time {exit_time}. Travel time: {travel_time} seconds.")
+    #         vehicles_to_remove.append(vehicle_id)
+
+    # for vehicle_id in vehicles_to_remove:
+    #     if vehicle_id in vehicle_entry_times:
+    #         del vehicle_entry_times[vehicle_id]
 
     for junction_id in junction_ids:
         current_phase = traci.trafficlight.getPhase(junction_id)
@@ -105,6 +126,31 @@ def analyze_traffic(step):
         previous_phase = current_phase
 
         return green_light_vehicle_counts
+    
+
+def calculate_average_time(up_data, down_data):
+    valid_times = []
+
+    # Calculate valid times for up_data
+    for vehicle_id, up_item in up_data.items():
+        if "start" in up_item and "end" in up_item and up_item["start"] > 0 and up_item["end"] > 0:
+            time_in_sec = up_item["end"] - up_item["start"]
+            valid_times.append(time_in_sec)
+
+    # Calculate valid times for down_data
+    for vehicle_id, down_item in down_data.items():
+        if "start" in down_item and "end" in down_item and down_item["start"] > 0 and down_item["end"] > 0:
+            time_in_sec = down_item["end"] - down_item["start"]
+            # print(f"Time taken for vehicle {vehicle_id} (Down) is {time_in_sec} seconds.")
+            valid_times.append(time_in_sec)
+
+    if valid_times:
+        average_time = sum(valid_times) / len(valid_times)
+        print(f"Average time: {average_time} seconds for {len(valid_times)} vehicles.")
+        return average_time
+    else:
+        return 0.0
+
 
 # Run the simulation
 if __name__ == "__main__":
@@ -113,3 +159,10 @@ if __name__ == "__main__":
     # Save the traffic flow data to a JSON file
     with open("traffic_flow.json", "w") as f:
         json.dump(traffic_flow, f, indent=4)
+
+
+    calculate_average_time(up, down)
+
+    # Save the vehicle entry and exit times to a JSON file  
+    with open("vehicle_entry_exit_times.json", "w") as f:
+        json.dump({"up": up, "down": down}, f, indent=4)

@@ -20,8 +20,10 @@ while step < 310:
     for vehicle_id in vehicle_ids:
         speed = traci.vehicle.getSpeed(vehicle_id)
         position = traci.vehicle.getPosition(vehicle_id)
+        print(f"Position: {position[1]}")
         lane_id = traci.vehicle.getLaneID(vehicle_id)
         vehicle_type = traci.vehicle.getTypeID(vehicle_id)
+        vehicle_route = traci.vehicle.getRouteID(vehicle_id)
         phase = traci.trafficlight.getPhase("center")
         phase_name = traci.trafficlight.getPhaseName("center")
         phase_duration = traci.trafficlight.getPhaseDuration("center")
@@ -31,6 +33,7 @@ while step < 310:
         print(f"Position: {position}")
         print(f"Lane: {lane_id}")
         print(f"Type: {vehicle_type}")
+        print(f"Route: {vehicle_route}")
         print()
 
         print(f"Phase: {phase}")
