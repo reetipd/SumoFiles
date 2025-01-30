@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2025-01-15 19:40:54 by Eclipse SUMO netconvert Version 1.20.0
+<!-- generated on 2025-01-16 15:25:25 by Eclipse SUMO netconvert Version 1.20.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
@@ -58,9 +58,9 @@
     </edge>
 
     <tlLogic id="center" type="static" programID="0" offset="0">
-        <phase duration="20" state="GGGG"/>
-        <phase duration="19"  state="yyyy"/>
-        <phase duration="50"  state="rrrr"/>
+        <phase duration="76" state="GGGG"/>
+        <phase duration="9"  state="yyyy"/>
+        <phase duration="5"  state="rrrr"/>
     </tlLogic>
 
     <junction id="center" type="traffic_light" x="0.00" y="100.00" incLanes="north_to_center_0 north_to_center_1 north_to_center_2 south_to_center_0 south_to_center_1 south_to_center_2" intLanes=":center_0_0 :center_0_1 :center_2_0 :center_2_1" shape="-9.60,104.00 6.40,104.00 7.23,100.97 8.77,99.03 9.36,97.79 9.60,96.00 -6.40,96.00 -7.23,99.03 -8.77,100.97 -9.36,102.21">
