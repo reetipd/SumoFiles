@@ -1,6 +1,9 @@
 import traci
 from traci import simulation
 import json
+import os
+import cv2
+import time
 
 sumo_binary = "sumo-gui" 
 # sumo_config_file = r"C:\Users\c00563648\OneDrive - University of Louisiana at Lafayette\Documents\GRA\Traffic\Sumo-Files\SumoFiles\Bellevue_116th_NE12th__2017-09-11_07-08-32\sumo_files\sumo_config.sumocfg"
@@ -21,14 +24,19 @@ vehicle_exit_times = {}
 def start_simulation():
     traci.start([sumo_binary, "-c", sumo_config_file])  
 
+    if not os.path.exists("sumo_steps"):
+        os.makedirs("sumo_steps")
+
     step = 0
     max_steps = 350  #
     while step < max_steps:
         traci.simulationStep() 
-
         traffic_flow = analyze_traffic(step)
 
+        screenshot_path = os.path.join("sumo_steps", f"step_{step:04d}.png")
         step += 1
+        traci.gui.screenshot("View #0", screenshot_path)
+
 
     traci.close()  
 
@@ -149,8 +157,7 @@ def calculate_average_time(up_data, down_data):
         print(f"Average time: {average_time} seconds for {len(valid_times)} vehicles.")
         return average_time
     else:
-        return 0.0
-
+        return 0.0    
 
 # Run the simulation
 if __name__ == "__main__":
