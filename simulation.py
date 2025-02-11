@@ -4,9 +4,13 @@ import json
 import os
 import cv2
 import time
+import csv
 
+
+import prepare_csv
 sumo_binary = "sumo-gui" 
 # sumo_config_file = r"C:\Users\c00563648\OneDrive - University of Louisiana at Lafayette\Documents\GRA\Traffic\Sumo-Files\SumoFiles\Bellevue_116th_NE12th__2017-09-11_07-08-32\sumo_files\sumo_config.sumocfg"
+# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/sumo_files/sumo_config.sumocfg"
 sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_07-08-32/sumo_files/sumo_config.sumocfg"
 
 green_light_vehicle_counts = {}  
@@ -21,6 +25,8 @@ vehiclesSouthToNorth = set()
 vehicle_entry_times = {}
 vehicle_exit_times = {}
 
+vehicle_data = {}
+
 def start_simulation():
     traci.start([sumo_binary, "-c", sumo_config_file])  
 
@@ -33,9 +39,9 @@ def start_simulation():
         traci.simulationStep() 
         traffic_flow = analyze_traffic(step)
 
-        screenshot_path = os.path.join("sumo_steps", f"step_{step:04d}.png")
+        # screenshot_path = os.path.join("sumo_steps", f"step_{step:04d}.png")
         step += 1
-        traci.gui.screenshot("View #0", screenshot_path)
+        # traci.gui.screenshot("View #0", screenshot_path)
 
 
     traci.close()  
@@ -57,6 +63,20 @@ def analyze_traffic(step):
     for vehicle_id in vehicle_ids:
         vehicle_position = traci.vehicle.getPosition(vehicle_id)
         lane_id = traci.vehicle.getLaneID(vehicle_id)
+        vehicle_route = traci.vehicle.getRouteID(vehicle_id)
+        speed = traci.vehicle.getSpeed(vehicle_id)
+
+        vehicle_data.setdefault(vehicle_id, []).append((step, vehicle_position[0], vehicle_position[1], vehicle_route, speed)) 
+
+        # vehicle_data[vehicle_data].append({
+        #     "step": step,
+        #     "x_position": vehicle_position[0],
+        #     "y_position": vehicle_position[1],
+        #     "route": vehicle_route,
+        # })
+
+        # print(f"Vehicle Data..", vehicle_data)
+
         if vehicle_position[1] <= line_1 and vehicle_id not in down and (lane_id == "north_to_center_0" or lane_id == "north_to_center_1"):
             down[vehicle_id] = {"start": step}
         if vehicle_id in down:
@@ -133,7 +153,7 @@ def analyze_traffic(step):
         # Update previous_phase for the next iteration
         previous_phase = current_phase
 
-        return green_light_vehicle_counts
+        return green_light_vehicle_counts, vehicle_data
     
 
 def calculate_average_time(up_data, down_data):
@@ -159,9 +179,11 @@ def calculate_average_time(up_data, down_data):
     else:
         return 0.0    
 
+
 # Run the simulation
 if __name__ == "__main__":
-    traffic_flow = start_simulation()
+    traffic_flow, vehicle_data = start_simulation()
+    # prepare_csv.prepare_llm_dataset(vehicle_data)
 
     # Save the traffic flow data to a JSON file
     with open("traffic_flow.json", "w") as f:
