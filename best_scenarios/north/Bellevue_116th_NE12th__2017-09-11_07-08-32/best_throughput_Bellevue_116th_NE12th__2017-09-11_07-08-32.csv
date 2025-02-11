@@ -1,0 +1,11 @@
+Scenario_ID,Scenario,Best_Group_By_Throughput,Best_Throughput
+0,"{'green': 15, 'yellow': 10, 'red': 35}",Group 3,10
+1,"{'green': 35, 'yellow': 5, 'red': 20}",Group 1,5
+2,"{'green': 40, 'yellow': 5, 'red': 15}",Group 1,6
+3,"{'green': 45, 'yellow': 10, 'red': 5}",Group 1,5
+4,"{'green': 25, 'yellow': 15, 'red': 20}",Group 1,10
+5,"{'green': 50, 'yellow': 5, 'red': 5}",Group 4,2
+6,"{'green': 20, 'yellow': 10, 'red': 30}",Group 1,0
+7,"{'green': 33, 'yellow': 12, 'red': 15}",Group 1,0
+8,"{'green': 28, 'yellow': 17, 'red': 15}",Group 1,0
+9,"{'green': 37, 'yellow': 8, 'red': 15}",Group 1,0

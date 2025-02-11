@@ -1,0 +1,11 @@
+Scenario_ID,Scenario,Best_Group_By_Time,Best_Travel_Time
+0,"{'green': 30, 'yellow': 10, 'red': 20}",Group 1,59.0
+1,"{'green': 35, 'yellow': 5, 'red': 20}",Group 3,79.66666666666667
+2,"{'green': 40, 'yellow': 5, 'red': 15}",Group 1,41.22222222222222
+3,"{'green': 45, 'yellow': 10, 'red': 5}",Group 1,47.0
+4,"{'green': 25, 'yellow': 15, 'red': 20}",Group 1,65.0
+5,"{'green': 50, 'yellow': 5, 'red': 5}",Group 4,40.7
+6,"{'green': 20, 'yellow': 10, 'red': 30}",Group 1,0.0
+7,"{'green': 33, 'yellow': 12, 'red': 15}",Group 3,46.42857142857143
+8,"{'green': 28, 'yellow': 17, 'red': 15}",Group 1,45.2
+9,"{'green': 37, 'yellow': 8, 'red': 15}",Group 1,0.0
