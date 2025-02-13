@@ -4,64 +4,26 @@ import json
 import os
 import time
 import csv
+import best_scenarios
+import get_best_scenarios
 
 sumo_binary = "sumo-gui"
-sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full/sumo_config.sumocfg"
+# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full/sumo_config.sumocfg"
+# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_08-08-50_Full/sumo_config.sumocfg"
 
-file_name = "Bellevue_116th_NE12th_2017-09-11_14-08-35_Full"
-
-# scenario_groups = [
-#     ("Group 1", [
-#        {"duration":60,"str":"GGGrrrrrrrGGGrrrrrrr"},
-#         {"duration":59,"str":"GGGrrrrrrrGGGrrrrrrr"},
-#          {"duration":60,"str":"rrrrrGGGrrrrrrrGGGrr"},
-#           {"duration":58,"str":"rrrrrGGGrrrrrrrGGGrr"},
-          
-#     ]),
-#     # ("Group 2", [
-#     #    {"duration":60,"str":"GGGrrrrrrrGGGrrrrrrr"},
-#     #     {"duration":59,"str":"GGGrrrrrrrGGGrrrrrrr"},
-#     #      {"duration":60,"str":"rrrrrGGGrrrrrrrGGGrr"},
-#     #       {"duration":58,"str":"rrrrrGGGrrrrrrrGGGrr"},
-          
-#     # ]),
-# ]
-
+file_name = "Bellevue_116th_NE12th__2017-09-11_08-08-50_Full_Video_"
 
 scenario_groups = [
     ("Group 1", [
-        {"duration": 60, "str": "GGGrrrrrrrGGGrrrrrrr"},
-        {"duration": 60, "str": "GGGrrrrrrrGGGrrrrrrr"},
-        {"duration": 60, "str": "rrrrrGGGrrrrrrrGGGrr"},
-        {"duration": 60, "str": "rrrrrGGGrrrrrrrGGGrr"},
-        {"duration": 60, "str": "GGGrrrrrrrGGGrrrrrrr"},
-        {"duration": 60, "str": "GGGrrrrrrrGGGrrrrrrr"},
-        {"duration": 60, "str": "rrrrrGGGrrrrrrrGGGrr"},
-        {"duration": 60, "str": "rrrrrGGGrrrrrrrGGGrr"},
+        {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
     ]),
 
     ("Group 2", [
-        {"duration": 60, "str": "GGGGrrrrrrGGGGrrrrrr"},
-        {"duration": 60, "str": "GGGGrrrrrrGGGGrrrrrr"},
-        {"duration": 60, "str": "rrrrGGGGrrrrrrGGGGrr"},
-        {"duration": 60, "str": "rrrrGGGGrrrrrrGGGGrr"},
-        {"duration": 60, "str": "GGGGrrrrrrGGGGrrrrrr"},
-        {"duration": 60, "str": "GGGGrrrrrrGGGGrrrrrr"},
-        {"duration": 60, "str": "rrrrGGGGrrrrrrGGGGrr"},
-        {"duration": 60, "str": "rrrrGGGGrrrrrrGGGGrr"},
+         {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
     ]),
-
-    # ("Group 3", [
-    #     {"duration": 60, "str": "GGGGGrrrrrGGGGGrrrrr"},
-    #     {"duration": 60, "str": "GGGGGrrrrrGGGGGrrrrr"},
-    #     {"duration": 60, "str": "rrrrGGGGGrrrrrGGGGGrr"},
-    #     {"duration": 60, "str": "rrrrGGGGGrrrrrGGGGGrr"},
-    #     {"duration": 60, "str": "GGGGGrrrrrGGGGGrrrrr"},
-    #     {"duration": 60, "str": "GGGGGrrrrrGGGGGrrrrr"},
-    #     {"duration": 60, "str": "rrrrGGGGGrrrrrGGGGGrr"},
-    #     {"duration": 60, "str": "rrrrGGGGGrrrrrGGGGGrr"},
-    # ]),
 ]
+
+
 
 total_vehicle_from_west_to_center = set()
 total_vehicle_from_center_to_west = set()
@@ -111,7 +73,7 @@ def set_traffic_lights(scenarios):
 
 
 
-def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval):
+def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval, group_id, video_index):
     """
     Run the simulation with dynamic phase changes at each interval.
     
@@ -120,42 +82,55 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     :param phase_durations: List of tuples [(green_duration, yellow_duration, red_duration), ...]
     :param change_interval: How often to change the traffic light phases (in steps).
     """
+
+    dynamic_value = "Full_Video_1"  # Replace with your dynamic value
+    sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/Bellevue_116th_NE12th_2017-09-11_14-08-35_{dynamic_value}/sumo_config.sumocfg"
+
     traci.start([sumo_binary, "-c", sumo_config_file])
     change = False
     current_step = 0
     interval_index = 0  # Start with the first phase configuration
     total_intervals = len(phase_durations)
 
-    global vehiclesToWest, vehiclesToEast, vehiclesToNorth, vehiclesToSouth
+    global vehiclesToWest, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehicle_time_tracking
     set_traffic_lights(phase_durations)
    
     traffic_flow = {}
     veh_time = {}
     idx_count = 0
-    while current_step < total_simulation_steps:
-        if current_step % change_interval == 0:
-            # print("Traffic Flow", traffic_flow )
-            current_scenario = phase_durations[interval_index]
-            interval_index = (interval_index + 1) % total_intervals
-            change = True
-            vehiclesToWest = set()
-            vehiclesToEast = set()
-            vehiclesToNorth = set()
-            vehiclesToSouth = set()
-            to_east = {}
-            to_west = {}
-            idx_count += 1
+    while current_step <= change_interval:
+        if current_step == change_interval:
+        #     # # print("Traffic Flow", traffic_flow )
+        #     # current_scenario = phase_durations[interval_index]
+        #     # interval_index = (interval_index + 1) % total_intervals
+        #     # change = True
+        #     # vehiclesToWest = set()
+        #     # vehiclesToEast = set()
+        #     # vehiclesToNorth = set()
+        #     # vehiclesToSouth = set()
+        #     # to_east = {}
+        #     # to_west = {}
+        #     # idx_count += 1
+
+            print("Done with 60 seconds ---- Run next scenario ")
+            print("traffic")
+            print(traffic_flow)
+            print("time")
+            print(veh_time)
+
 
 
             
         traci.simulationStep()
-        traffic_flow = get_veh_count(interval_index-1, current_step, idx_count-1)
-        veh_time = get_veh_time(interval_index-1, current_step, idx_count-1)
+        traffic_flow = get_veh_count(interval_index-1, current_step, idx_count)
+        veh_time = get_veh_time(interval_index-1, current_step, idx_count, change, group_id)
 
+        
         
         change = False  
         
         current_step += 1
+    print("Returning..")
     
     traci.close()
     return traffic_flow, veh_time
@@ -211,9 +186,18 @@ def get_veh_count(interval_index, step, idx_count):
 
     return green_light_vehicle_counts
 
-def get_veh_time(interval_index, step, idx_count):
+def get_veh_time(interval_index, step, idx_count, phase_change, group_id):
     global vehicle_time_tracking
     vehicle_ids = traci.vehicle.getIDList()  
+
+    if phase_change:
+        if vehicle_time_tracking is not None:
+            for veh in list(vehicle_time_tracking.keys()):  
+                if veh in vehicle_time_tracking:
+                    if "end" not in vehicle_time_tracking[veh] and vehicle_time_tracking[veh]["traffic_scenario"] == idx_count - 1:
+                        vehicle_time_tracking[veh]["start"] = step
+                        vehicle_time_tracking[veh]["traffic_scenario"] = idx_count
+
 
     if vehicle_time_tracking is not None:
         for veh in list(vehicle_time_tracking.keys()):  
@@ -221,7 +205,7 @@ def get_veh_time(interval_index, step, idx_count):
                 if "captured" not in vehicle_time_tracking[veh]: 
                     vehicle_time_tracking[veh]["end"] = step 
                     vehicle_time_tracking[veh]["captured"] = True
-                    vehicle_time_tracking[veh]["traffic_scenario"]= idx_count
+                    # vehicle_time_tracking[veh]["traffic_scenario"]= idx_count
 
                     # print(f"Vehicle {veh} left at step {step}")
 
@@ -235,6 +219,10 @@ def get_veh_time(interval_index, step, idx_count):
                             "north_to_center_0", "north_to_center_1", "north_to_center_2",
                             "south_to_center_0", "south_to_center_1", "south_to_center_2"]:
                 vehicle_time_tracking[vehicle_id] = {"start": step}
+                vehicle_time_tracking[vehicle_id]["traffic_scenario"] = idx_count
+                vehicle_time_tracking[vehicle_id]["group_id"] = group_id
+
+                
 
     return vehicle_time_tracking
 
@@ -282,29 +270,15 @@ def analyze_traffic(step, interval_index, change, change_interval):
                 to_west[vehicle_id]["end"] = step
     
 def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group_id):
+    print("Savving data..?")
     global scenario_stats
-
-    # for scenario_id, scenario in enumerate(scenarios):
-    #     vehicles_in_scenario = []
-
-    #     for vehicle_data in veh_time.values():
-    #         if "traffic_scenario" in vehicle_data and "end" in vehicle_data: 
-    #             if vehicle_data['traffic_scenario'] == scenario_id:
-    #                 vehicles_in_scenario.append(vehicle_data)
-
-        
-    #     total_time = 0
-    #     for vehicle in vehicles_in_scenario:
-    #         total_time += vehicle['end'] - vehicle['start']
-        
-    #     average_time = total_time / len(vehicles_in_scenario) if vehicles_in_scenario else 0
-
     scenario_time_stats = {}
 
     # Loop through each vehicle's data
     for vehicle_data in veh_time.values():
         if "traffic_scenario" in vehicle_data and "end" in vehicle_data:
             traffic_scenario = vehicle_data['traffic_scenario']  
+            # print("Traffic Scenario: ", traffic_scenario)
             
             if traffic_scenario not in scenario_time_stats:
                 scenario_time_stats[traffic_scenario] = {'total_time': 0, 'vehicle_count': 0}
@@ -317,13 +291,14 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
         for scenario, stats in scenario_time_stats.items()
     }
 
-
     throughput = 0
     for x in range(len(traffic_flow_data)):
         scenario_id = x % len(scenarios)
         scenario_description = scenarios[scenario_id]
 
-        average_time = average_time_per_scenario.get(scenario_id, 0)
+        average_time = average_time_per_scenario.get(x, 0)
+
+        print("Traffic flow Data", traffic_flow_data)
 
         # Calculate throughput for the current row
         throughput = traffic_flow_data[x]["west_to_east"]
@@ -337,13 +312,39 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
             'throughput': throughput,
             'scenario_description': scenario_description,
             'group_id': group_id,
-            'scenario_id': scenario_id
+            'scenario_id': scenario_id,
+            'idx_count':x,
+            "scenario_time_description": get_light_durations_from_scenario(scenario_description)
         }
+
+
+        print("stats", scenario_stats)
 
         # print(f"{x}+{group_id}")
 
+def get_light_durations_from_scenario(phase):
+    
+        phase_state = phase["str"]  # Example: "GGGrrrrrrrGGGrrrrrrr"
+        phase_duration = phase["duration"]  # Duration of this phase
 
-def run_all_scenarios(scenario_groups):
+        # Count occurrences of each light state
+        green_count = phase_state.count("G")
+        yellow_count = phase_state.count("y")
+        red_count = phase_state.count("r")
+
+        total_lights = len(phase_state)  # Total traffic lights controlled
+
+        # Calculate actual time for each color
+        green_time = (green_count / total_lights) * phase_duration
+        yellow_time = (yellow_count / total_lights) * phase_duration
+        red_time = (red_count / total_lights) * phase_duration
+
+        scenario_desc = f"Green: {green_time:.2f}, Yellow: {yellow_time:.2f}, Red: {red_time:.2f}"
+
+        return scenario_desc
+
+
+def run_all_scenarios(scenario_groups, video_index):
     global vehiclesToWestAll, vehiclesToEastAll, vehiclesToSouthAll, vehiclesToNorthAll, green_light_vehicle_counts
     total_simulation_steps = 5000  # e.g., run for 600 steps (10 minutes)
     change_interval = 60 
@@ -353,8 +354,8 @@ def run_all_scenarios(scenario_groups):
         group_id = scenario_group[0]
         scenario_group =  scenario_group[1]
         # Run the simulation with dynamic phase changes
-        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval)
-        # print("Traffic flow", traffic_flow)
+        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval, group_id, video_index)
+        # print("Vehicle time: ", veh_time)
 
         save_avg_and_throughput_to_csv(traffic_flow, veh_time, scenario_group, group_id)
         vehiclesToWestAll = set()
@@ -364,19 +365,29 @@ def run_all_scenarios(scenario_groups):
 
 
 if __name__ == "__main__":
+    best_scenario_df = []
     total_simulation_steps = 600  # e.g., run for 600 steps (10 minutes)
     change_interval = 60  # Change the traffic light phases every 50 steps
 
-    run_all_scenarios(scenario_groups)
+    for i in range(1):
+        run_all_scenarios(scenario_groups, i)
 
-    with open(f"files/east/{file_name}.csv", mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description', 'Average_Travel_Time', 'Throughput'])
+        path = f"files/full/{file_name}_{i}.csv"
+        with open(path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description', 'Scenario_Time_Description' ,'Average_Travel_Time', 'Throughput', 'Idx_Count'])
+            
+            for scenario, stats in scenario_stats.items():
+                writer.writerow([stats['scenario_id'], stats['group_id'], stats['scenario_description'], stats['scenario_time_description'] ,stats['average_time'], stats['throughput'], stats['idx_count']])
+
+        print("Saved average time and throughput to 'scenario_stats.csv'")
+
+        # Get the best scenario
+        print("Need to get best scenario here....")
+        df1, df2 = get_best_scenarios.analyze_traffic_scenarios(path)
         
-        for scenario, stats in scenario_stats.items():
-            writer.writerow([stats['scenario_id'], stats['group_id'], stats['scenario_description'], stats['average_time'], stats['throughput']])
+        
 
-    print("Saved average time and throughput to 'scenario_stats.csv'")
     
     # Run the simulation with dynamic phase changes
     # traffic_flow = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenarios, change_interval)
