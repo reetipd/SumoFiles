@@ -6,6 +6,7 @@ import time
 import csv
 import best_scenarios
 import get_best_scenarios
+import pandas as pd
 
 sumo_binary = "sumo-gui"
 # sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full/sumo_config.sumocfg"
@@ -14,13 +15,17 @@ sumo_binary = "sumo-gui"
 file_name = "Bellevue_116th_NE12th__2017-09-11_08-08-50_Full_Video_"
 
 scenario_groups = [
-    ("Group 1", [
+    ("Static", [
         {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
     ]),
 
-    ("Group 2", [
-         {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
-    ]),
+    # ("Group 2", [
+    #      {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
+    # ]),
+
+    # ("Group 3", [
+    #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
+    # ]),
 ]
 
 
@@ -54,6 +59,7 @@ vehicle_exit_times = {}
 
 vehicle_data = {}
 scenario_stats = {}
+remaining_vehicles= {}
 
 
 def set_traffic_lights(scenarios):
@@ -73,7 +79,7 @@ def set_traffic_lights(scenarios):
 
 
 
-def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval, group_id, video_index):
+def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval, group_id, video_index, inject):
     """
     Run the simulation with dynamic phase changes at each interval.
     
@@ -83,7 +89,7 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     :param change_interval: How often to change the traffic light phases (in steps).
     """
 
-    dynamic_value = "Full_Video_1"  # Replace with your dynamic value
+    dynamic_value = f"Full_Video_{video_index}"  # Replace with your dynamic value
     sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/Bellevue_116th_NE12th_2017-09-11_14-08-35_{dynamic_value}/sumo_config.sumocfg"
 
     traci.start([sumo_binary, "-c", sumo_config_file])
@@ -92,8 +98,21 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     interval_index = 0  # Start with the first phase configuration
     total_intervals = len(phase_durations)
 
-    global vehiclesToWest, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehicle_time_tracking
+    global vehiclesToWest, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehicle_time_tracking, remaining_vehicle, green_light_vehicle_counts, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehiclesToWest 
+    green_light_vehicle_counts = {}
+    vehiclesToWestAll = set()
+    vehiclesToEastAll = set()
+    vehiclesToNorthAll = set()
+    vehiclesToSouthAll = set()
+    vehiclesToEast = set()
+    vehiclesToWest = set()
+    vehiclesToNorth = set()
+    vehiclesToSouth = set()
+
     set_traffic_lights(phase_durations)
+
+    if inject:
+        inject_remaining_vehicles()
    
     traffic_flow = {}
     veh_time = {}
@@ -101,10 +120,15 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     while current_step <= change_interval:
         if current_step == change_interval:
             print("Done with 60 seconds ---- Run next scenario ")
-            print("traffic")
-            print(traffic_flow)
-            print("time")
-            print(veh_time)
+            # print("traffic")
+            # print(traffic_flow)
+            # print("time")
+            # print(veh_time)
+
+            print("Getting the vehicle information: ")
+            get_vehicle_information()
+            # print("Remaining...", remaining_vehicles)
+            print("Len -------->>>", len(remaining_vehicles))
 
 
 
@@ -214,51 +238,8 @@ def get_veh_time(interval_index, step, idx_count, phase_change, group_id):
 
     return vehicle_time_tracking
 
-
-
-def analyze_traffic(step, interval_index, change, change_interval):
-
-    line_1 = 5
-    line_2 = 185
-
-    
-    # global current_green_count_WTOE, current_green_count_ETOW, previous_phase, vehiclesToEast, vehiclesToWest, green_light_vehicle_counts
-    # junction_ids = traci.trafficlight.getIDList() 
-    global to_east, to_west
-
-    vehicle_ids = traci.vehicle.getIDList()
-
-    for vehicle_id in vehicle_ids:
-        vehicle_position = traci.vehicle.getPosition(vehicle_id)
-        lane_id = traci.vehicle.getLaneID(vehicle_id)
-        vehicle_route = traci.vehicle.getRouteID(vehicle_id)
-        speed = traci.vehicle.getSpeed(vehicle_id)
-
-        # TODO: Change for other way
-        if vehicle_id not in to_east and (lane_id == "west_to_center_0" or lane_id == "west_to_center_1"):
-            to_east[vehicle_id] = {"start": step}
-            to_east[vehicle_id]["traffic_scenario"] = interval_index
-        if vehicle_id in to_east:
-            if vehicle_position[0] >= line_2 and (lane_id == "center_to_east_0" or lane_id == "center_to_east_1"):
-                # if interval_index != to_east[vehicle_id]["traffic_scenario"]:
-                #     if step / change_interval >= interval_index:
-                #         to_east[vehicle_id]["traffic_scenario"] = interval_index
-                to_east[vehicle_id]["end"] = step
-                
-
-        if  vehicle_id not in to_west and (lane_id == "east_to_center_0" or lane_id == "east_to_center_1"):
-            to_west[vehicle_id] = {"start": step}
-            to_west[vehicle_id]["traffic_scenario"] = interval_index
-
-        if vehicle_id in to_west:
-            if  vehicle_position[0] <= line_1 and (lane_id == "center_to_west_0" or lane_id == "center_to_west_1"):
-                # if interval_index != to_west[vehicle_id]["traffic_scenario"]:
-                #     if step / change_interval >= interval_index:
-                #         to_west[vehicle_id]["traffic_scenario"] = interval_index
-                to_west[vehicle_id]["end"] = step
-    
 def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group_id):
-    print("Savving data..?")
+    # print("Savving data..?")
     global scenario_stats
     scenario_time_stats = {}
 
@@ -287,7 +268,7 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
 
         average_time = average_time_per_scenario.get(x, 0)
 
-        print("Traffic flow Data", traffic_flow_data)
+        # print("Traffic flow Data", traffic_flow_data)
 
         # Calculate throughput for the current row
         throughput = traffic_flow_data[x]["west_to_east"]
@@ -334,6 +315,7 @@ def get_light_durations_from_scenario(phase):
 
 
 def run_all_scenarios(scenario_groups, video_index):
+    inject = False
     global vehiclesToWestAll, vehiclesToEastAll, vehiclesToSouthAll, vehiclesToNorthAll, green_light_vehicle_counts
     total_simulation_steps = 5000  # e.g., run for 600 steps (10 minutes)
     change_interval = 60 
@@ -343,7 +325,7 @@ def run_all_scenarios(scenario_groups, video_index):
         group_id = scenario_group[0]
         scenario_group =  scenario_group[1]
         # Run the simulation with dynamic phase changes
-        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval, group_id, video_index)
+        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval, group_id, video_index, inject)
         # print("Vehicle time: ", veh_time)
 
         save_avg_and_throughput_to_csv(traffic_flow, veh_time, scenario_group, group_id)
@@ -352,14 +334,54 @@ def run_all_scenarios(scenario_groups, video_index):
         vehiclesToNorthAll = set()
         vehiclesToSouthAll = set()
 
+        inject = True
+
+
+def get_vehicle_information():
+    global remaining_vehicles
+    vehicle_ids = traci.vehicle.getIDList()
+    for vehicle_id in vehicle_ids:
+        speed = traci.vehicle.getSpeed(vehicle_id)
+        position = traci.vehicle.getPosition(vehicle_id)
+        route_id = traci.vehicle.getRouteID(vehicle_id)
+        lane_id = traci.vehicle.getLaneID(vehicle_id)
+        edge_id = traci.vehicle.getRoadID(vehicle_id)
+        lane_index = traci.vehicle.getLaneIndex(vehicle_id)
+        pos = traci.vehicle.getLanePosition(vehicle_id)
+
+        remaining_vehicles[vehicle_id] = {
+            "speed": speed,
+            "position": position,
+            "route_id": route_id,
+            "lane_id": lane_id,
+            "edge_id": edge_id,
+            "lane_index":lane_index,
+            "lane_position": pos,
+        }
+
+    # return remaining_vehicles
+
+
+def inject_remaining_vehicles():
+    global remaining_vehicles
+    for vehicle_id, data in remaining_vehicles.items():
+        vehicle_id = f"old_+{vehicle_id}"
+        # edge_id, lane, pos = traci.simulation.convertRoadPosition(data["position"][0], data["position"][1])
+        # print("vehicle and route", vehicle_id, data["route_id"])
+        traci.vehicle.add(vehID=vehicle_id, routeID=data["route_id"], departPos=str(data["lane_position"]), departSpeed=str(data["speed"]))
+        traci.vehicle.moveToXY(vehID=vehicle_id, edgeID=data["edge_id"], laneIndex=data["lane_index"], x=data["position"][0], y=data["position"][1])
+        # traci.vehicle.setSpeed(vehID=vehicle_id, speed=data["speed"])
+    
+    remaining_vehicles = {}
 
 if __name__ == "__main__":
-    best_scenario_df = []
+    throughput_final = []
+    time_final = []
     total_simulation_steps = 600  # e.g., run for 600 steps (10 minutes)
     change_interval = 60  # Change the traffic light phases every 50 steps
 
-    for i in range(1):
-        run_all_scenarios(scenario_groups, i)
+    for i in range(2):
+        run_all_scenarios(scenario_groups, i + 1)
 
         path = f"files/full/{file_name}_{i}.csv"
         with open(path, mode='w', newline='') as file:
@@ -373,12 +395,34 @@ if __name__ == "__main__":
 
         # Get the best scenario
         print("Need to get best scenario here....")
-        df1, df2 = get_best_scenarios.analyze_traffic_scenarios(path)
+
+        # Get the best scenario, throughput and time for each cropped video
+        best_throughout, best_time = get_best_scenarios.analyze_traffic_scenarios(path, i + 1)
+
+        throughput_final.append(best_throughout)
+        time_final.append(best_time)
+
+        # print("Video index..", i)
+        # print("Best dataframe:")
+        # print(best_throughout)
+        # print(best_time)
+
+        # TODO: Append the best throughput and time -> Get the final one with best throughput and time for each time interval video
+        # OR can just save different files for diff cropped videos
+
+    final_df_throughput = pd.concat(throughput_final, ignore_index=True)
+    final_df_time = pd.concat(time_final, ignore_index=True)
+
+    # Print the properly merged DataFrames
+    print(final_df_throughput)
+    print(final_df_time)
+
+    # Save to a CSV file
+    folder_path = 'best_scenarios/full'  
+    final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name}.csv', index=False)
+    final_df_time.to_csv(f'{folder_path}/best_time_{file_name}.csv', index=False)
+
+    print("File saved successfully.")
         
         
 
-    
-    # Run the simulation with dynamic phase changes
-    # traffic_flow = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenarios, change_interval)
-
-    # save_avg_and_throughput_to_csv(traffic_flow, up, to_east)
