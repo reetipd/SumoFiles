@@ -100,18 +100,6 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     idx_count = 0
     while current_step <= change_interval:
         if current_step == change_interval:
-        #     # # print("Traffic Flow", traffic_flow )
-        #     # current_scenario = phase_durations[interval_index]
-        #     # interval_index = (interval_index + 1) % total_intervals
-        #     # change = True
-        #     # vehiclesToWest = set()
-        #     # vehiclesToEast = set()
-        #     # vehiclesToNorth = set()
-        #     # vehiclesToSouth = set()
-        #     # to_east = {}
-        #     # to_west = {}
-        #     # idx_count += 1
-
             print("Done with 60 seconds ---- Run next scenario ")
             print("traffic")
             print(traffic_flow)
@@ -282,9 +270,10 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
             
             if traffic_scenario not in scenario_time_stats:
                 scenario_time_stats[traffic_scenario] = {'total_time': 0, 'vehicle_count': 0}
-            
-            scenario_time_stats[traffic_scenario]['total_time'] += vehicle_data['end'] - vehicle_data['start']
-            scenario_time_stats[traffic_scenario]['vehicle_count'] += 1
+
+            if vehicle_data["end"] != 0:            
+                scenario_time_stats[traffic_scenario]['total_time'] += vehicle_data['end'] - vehicle_data['start']
+                scenario_time_stats[traffic_scenario]['vehicle_count'] += 1
 
     average_time_per_scenario = {
         scenario: stats['total_time'] / stats['vehicle_count'] if stats['vehicle_count'] > 0 else 0
@@ -329,7 +318,7 @@ def get_light_durations_from_scenario(phase):
 
         # Count occurrences of each light state
         green_count = phase_state.count("G")
-        yellow_count = phase_state.count("y")
+        yellow_count = phase_state.count("Y")
         red_count = phase_state.count("r")
 
         total_lights = len(phase_state)  # Total traffic lights controlled
