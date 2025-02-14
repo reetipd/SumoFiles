@@ -14,19 +14,132 @@ sumo_binary = "sumo-gui"
 
 file_name = "Bellevue_116th_NE12th__2017-09-11_08-08-50_Full_Video_"
 
+# scenario_groups = [
+#     # ("Static", [
+#     #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
+#     # ]),
+
+#     ("Static", [
+#         {"duration": 60, "str": "GGYYYYrrrrGGYYYYrrrr"}  # 30s Green, 5s Yellow, 25s Red
+#     ])
+
+#     # ("Group 2", [
+#     #      {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
+#     # ]),
+
+#     # ("Group 3", [
+#     #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
+#     # ]),
+# ]
+
 scenario_groups = [
+    # ("Static", [
+    #     {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light":"Green", "road":"NS"},  # NS Green (30s), EW Red
+    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light":"Yellow", "road":"NS"},  # NS Yellow (5s), EW Red
+    #     {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light":"Red", "road":"NS"},  # EW Green (30s), NS Red
+    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road":"NS"}   # EW Yellow (5s), NS Red
+    # ]),
+    # ("Group1", [
+    #     {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light":"Green", "road":"NS"},  # NS Green (30s), EW Red
+    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light":"Yellow", "road":"NS"},  # NS Yellow (5s), EW Red
+    #     {"duration": 30, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light":"Red", "road":"NS"},  # EW Green (30s), NS Red
+    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road":"NS"}   # EW Yellow (5s), NS Red
+    # ])
+
+
+# # Standard NS & EW Split Timing
+
     ("Static", [
-        {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
+        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
     ]),
 
-    # ("Group 2", [
-    #      {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
-    # ]),
+# #Separate Phases for North and South
+    ("Group1", [
+    {"duration": 15, "str": "GGGGGrrrrrrrrrrrrrrr", "traffic_light": "Green", "road": "N"},
+    {"duration": 5, "str": "YYYYYrrrrrrrrrrrrrrr", "traffic_light": "Yellow", "road": "N"},
+    {"duration": 15, "str": "rrrrrGGGGGrrrrrrrrrr", "traffic_light": "Green", "road": "S"},
+    {"duration": 5, "str": "rrrrrYYYYYrrrrrrrrrr", "traffic_light": "Yellow", "road": "S"},
+    {"duration": 15, "str": "rrrrrrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "E"},
+    {"duration": 5, "str": "rrrrrrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "E"},
+    {"duration": 15, "str": "rrrrrrrrrrrrrrrGGGGG", "traffic_light": "Green", "road": "W"},
+    {"duration": 5, "str": "rrrrrrrrrrrrrrrYYYYY", "traffic_light": "Yellow", "road": "W"}
+     ]),
 
-    # ("Group 3", [
-    #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
-    # ]),
+# # #Dedicated Left Turns
+
+("Group2", [
+    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+    {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+]),
+
+# # #Left Turns + Protected Right Turns
+
+# ("Group3", [
+#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+#     {"duration": 10, "str": "rrGGGrrrrrrrGGGrrrrr", "traffic_light": "Protected Right", "road": "All"}
+# ]),
+
+# # #More Frequent Light Changes for High Traffic
+
+# ("Group4", [
+#     {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+#     {"duration": 10, "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
+#     {"duration": 10, "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
+#     {"duration": 10, "str": "rrrrrrrrrGrrrrrrrrrr", "traffic_light": "Left Turn", "road": "E"},
+#     {"duration": 10, "str": "rrrrrrrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "W"}
+# ]),
+
+# # #Balanced Timing with Left Turns First
+# ("Group5", [
+#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# # #Left Turns First, Starting with East-West
+# ("Group6", [
+#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+# ])
+
+
 ]
+
+# scenario_groups = [
+#     ("Static", [
+#         # North-South direction phases
+#         {"duration": 15, "str": "GGGGGRRRRRRRRRRRR", "traffic_light": "Green", "road": "N"},  # North Green (15s), South Red
+#         {"duration": 5,  "str": "YYYYYRRRRRRRRRRRR", "traffic_light": "Yellow", "road": "N"},  # North Yellow (5s), South Red
+#         {"duration": 15, "str": "RRRRRRRRRRRRRRRRR", "traffic_light": "Red", "road": "N"},  # North Red (15s), South Green
+
+#         # East-West direction phases
+#         {"duration": 15, "str": "RRRRRRRRRRRRRRRGGGGG", "traffic_light": "Green", "road": "E"},  # East Green (15s), West Red
+#         {"duration": 5,  "str": "RRRRRRRRRRRRRRRYYYYY", "traffic_light": "Yellow", "road": "E"},  # East Yellow (5s), West Red
+#         {"duration": 15, "str": "RRRRRRRRRRRRRRRRR", "traffic_light": "Red", "road": "E"},  # East Red (15s), West Green
+#     ])
+# ]
 
 
 
@@ -88,9 +201,10 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     :param phase_durations: List of tuples [(green_duration, yellow_duration, red_duration), ...]
     :param change_interval: How often to change the traffic light phases (in steps).
     """
-
-    dynamic_value = f"Full_Video_{video_index}"  # Replace with your dynamic value
-    sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/Bellevue_116th_NE12th_2017-09-11_14-08-35_{dynamic_value}/sumo_config.sumocfg"
+    print("Video ------------------------------>>>>>>>>>", video_index)
+    dynamic_value = f"Video_{video_index}"  # Replace with your dynamic value
+    # sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/Bellevue_116th_NE12th_2017-09-11_14-08-35_{dynamic_value}/sumo_config.sumocfg"
+    sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_14-08-35_Cropped/{dynamic_value}/sumo_config.sumocfg"
 
     traci.start([sumo_binary, "-c", sumo_config_file])
     change = False
@@ -264,7 +378,7 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
     throughput = 0
     for x in range(len(traffic_flow_data)):
         scenario_id = x % len(scenarios)
-        scenario_description = scenarios[scenario_id]
+        scenario_description = scenarios
 
         average_time = average_time_per_scenario.get(x, 0)
 
@@ -284,7 +398,7 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
             'group_id': group_id,
             'scenario_id': scenario_id,
             'idx_count':x,
-            "scenario_time_description": get_light_durations_from_scenario(scenario_description)
+            # "scenario_time_description": get_light_durations_from_scenario(scenario_description)
         }
 
 
@@ -293,6 +407,8 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
         # print(f"{x}+{group_id}")
 
 def get_light_durations_from_scenario(phase):
+        
+        print("scenario desc", phase)
     
         phase_state = phase["str"]  # Example: "GGGrrrrrrrGGGrrrrrrr"
         phase_duration = phase["duration"]  # Duration of this phase
@@ -380,16 +496,16 @@ if __name__ == "__main__":
     total_simulation_steps = 600  # e.g., run for 600 steps (10 minutes)
     change_interval = 60  # Change the traffic light phases every 50 steps
 
-    for i in range(2):
+    for i in range(1):
         run_all_scenarios(scenario_groups, i + 1)
 
         path = f"files/full/{file_name}_{i}.csv"
         with open(path, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description', 'Scenario_Time_Description' ,'Average_Travel_Time', 'Throughput', 'Idx_Count'])
+            writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description' ,'Average_Travel_Time', 'Throughput', 'Idx_Count'])
             
             for scenario, stats in scenario_stats.items():
-                writer.writerow([stats['scenario_id'], stats['group_id'], stats['scenario_description'], stats['scenario_time_description'] ,stats['average_time'], stats['throughput'], stats['idx_count']])
+                writer.writerow([stats['scenario_id'], stats['group_id'], stats['scenario_description'],stats['average_time'], stats['throughput'], stats['idx_count']])
 
         print("Saved average time and throughput to 'scenario_stats.csv'")
 
