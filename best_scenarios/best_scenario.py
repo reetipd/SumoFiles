@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Your data
-data = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/files/north/Bellevue_116th_NE12th__2017-09-11_14-08-35_North_South.csv"
-filename = "Bellevue_116th_NE12th__2017-09-11_14-08-35_North_South"
+data = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/files/east/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full.csv"
+filename = "Bellevue_116th_NE12th__2017-09-11_14-08-35_Full"
 
 df = pd.read_csv(data)
 
@@ -44,7 +44,7 @@ final_df_throughput = pd.DataFrame(final_result_throughput)
 final_df_time = pd.DataFrame(final_result_time)
 
 # Save to a CSV file
-folder_path = 'best_scenarios/north'  
+folder_path = 'best_scenarios/full'  
 final_df_throughput.to_csv(f'{folder_path}/best_throughput_{filename}.csv', index=False)
 final_df_time.to_csv(f'{folder_path}/best_time_{filename}.csv', index=False)
 

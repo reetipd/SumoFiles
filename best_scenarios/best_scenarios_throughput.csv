@@ -1,5 +1,0 @@
-Scenario_ID,Group_IDScenario_Description,Average_Travel_Time,Throughput
-Group 1,"{'green': 30, 'yellow': 15, 'red': 15}",34.22222222222222,10
-Group 2,"{'green': 20, 'yellow': 0, 'red': 0}",25.4,6
-Group 1,"{'green': 50, 'yellow': 5, 'red': 5}",58.333333333333336,9
-Group 2,"{'green': 50, 'yellow': 5, 'red': 5}",58.333333333333336,9
