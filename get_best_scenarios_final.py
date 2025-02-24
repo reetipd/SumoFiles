@@ -1,53 +1,3 @@
-# import pandas as pd
-
-# def analyze_traffic_scenarios(file_path):
-#     # Read the CSV file
-#     df = pd.read_csv(file_path)
-
-#     final_result_throughput = []
-#     final_result_time = []
-
-#     # Process the data
-#     for scenario in df['Scenario_ID'].unique():
-#         scenario_data = df[df['Scenario_ID'] == scenario]
-
-#         # Find the best throughput group
-#         if scenario_data['Throughput'].max() > 0: 
-#             best_throughput_group = scenario_data.loc[scenario_data['Throughput'].idxmax()]
-#         else:
-#             best_throughput_group = scenario_data.iloc[0]
-
-#         # Find the best time group
-#         if scenario_data['Average_Travel_Time'].min() > 0:  
-#             best_time_group = scenario_data.loc[scenario_data['Average_Travel_Time'].idxmin()]
-#         else:
-#             best_time_group = scenario_data.iloc[0] 
-
-#         # Store results for throughput and time
-#         best_group_throughput_data = {
-#             'Scenario_ID': scenario,
-#             'Scenario': best_throughput_group['Scenario_Description'],
-#             'Best_Group_By_Throughput': best_throughput_group['Group_ID'],
-#             'Best_Throughput': best_throughput_group['Throughput']      
-#         }
-
-#         best_group_time_data = {
-#             'Scenario_ID': scenario,
-#             'Scenario': best_throughput_group['Scenario_Description'],
-#             'Best_Group_By_Time': best_time_group['Group_ID'],
-#             'Best_Travel_Time': best_time_group['Average_Travel_Time']
-#         }
-
-#         final_result_throughput.append(best_group_throughput_data)
-#         final_result_time.append(best_group_time_data)
-
-#     # Convert the results to DataFrames
-#     final_df_throughput = pd.DataFrame(final_result_throughput)
-#     final_df_time = pd.DataFrame(final_result_time)
-
-#     # Return the DataFrames
-#     return final_df_throughput, final_df_time
-
 import pandas as pd
 import csv
 
@@ -136,3 +86,44 @@ def analyze_traffic_scenarios(file_path, video_index):
 
     # Return the DataFrames
     return final_df_throughput, final_df_time
+
+throughput_final = []
+time_final = []
+
+
+for i in range(2):
+    file_name = "Bellevue_150th_Newport__2017-09-11_17-08-32_6Min_Data_Upscaled_New"
+    path = f"files/Bellevue_150th_Newport__2017-09-11_17-08-32/new/full_6/{file_name}_{i}.csv"
+        
+
+    # Get the best scenario, throughput and time for each cropped video
+    best_throughout, best_time = analyze_traffic_scenarios(path, i + 1)
+
+    throughput_final.append(best_throughout)
+    time_final.append(best_time)
+
+    final_df_throughput = pd.concat(throughput_final, ignore_index=True)
+    final_df_time = pd.concat(time_final, ignore_index=True)
+
+    filtered_throughput = final_df_throughput[final_df_throughput['Group_ID'] != 'Static']
+    filtered_time = final_df_time[final_df_time['Group_ID'] != 'Static']
+
+    sum_throughput = filtered_throughput['Throughput'].sum()
+
+    avg_time = filtered_time['Average_Travel_Time'].sum() / 12
+
+    # Print the results
+    print("Sum of Throughput (excluding Static):", sum_throughput)
+    print("Average Time (excluding Static):", avg_time)
+
+    # Save to a CSV file
+    folder_path = 'best_scenarios/Bellevue_150th_Newport__2017-09-11_17-08-32/new/full_6'
+
+    final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name}.csv', index=False)
+    final_df_time.to_csv(f'{folder_path}/best_time_{file_name}.csv', index=False)
+
+    # Save sum and avg to a separate file
+    summary_data = pd.DataFrame({'Metric': ['Sum Throughput', 'Avg Time'], 'Value': [sum_throughput, avg_time]})
+    summary_data.to_csv(f'{folder_path}/summary_metrics_{file_name}.csv', index=False)
+
+    print("File saved successfully.")
