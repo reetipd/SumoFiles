@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<edges><edge from="n1" to="center" id="north_to_center" type="3L45" /><edge from="center" to="n1" id="center_to_north" type="2L45" /><edge from="n3" to="center" id="south_to_center" type="4L45" /><edge from="center" to="n3" id="center_to_south" type="2L45" /></edges>
