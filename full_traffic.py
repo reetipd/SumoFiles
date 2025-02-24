@@ -8,138 +8,323 @@ import best_scenarios
 import get_best_scenarios
 import pandas as pd
 
-sumo_binary = "sumo-gui"
+sumo_binary = "sumo"
 # sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full/sumo_config.sumocfg"
 # sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_08-08-50_Full/sumo_config.sumocfg"
 
-file_name = "Bellevue_116th_NE12th__2017-09-11_08-08-50_Full_Video_"
+file_name = "Synthesized_1Min"
 
 # scenario_groups = [
-#     # ("Static", [
-#     #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
-#     # ]),
+# # ("Static", [
+# #     {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+# #     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+# #     {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+# # ]),
 
-#     ("Static", [
-#         {"duration": 60, "str": "GGYYYYrrrrGGYYYYrrrr"}  # 30s Green, 5s Yellow, 25s Red
-#     ])
+# ("Static", [
+#        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+#    ]),
 
-#     # ("Group 2", [
-#     #      {"duration": 60, "str": "rrrrGGGGGGrrrrGGGGGG"},  # All directions left + right
-#     # ]),
-
-#     # ("Group 3", [
-#     #     {"duration": 60, "str": "GGGYYYrrrrGGGYYYrrrr"},  # North-South straight go + left turn
-#     # ]),
-# ]
-
-scenario_groups = [
-    # ("Static", [
-    #     {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light":"Green", "road":"NS"},  # NS Green (30s), EW Red
-    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light":"Yellow", "road":"NS"},  # NS Yellow (5s), EW Red
-    #     {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light":"Red", "road":"NS"},  # EW Green (30s), NS Red
-    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road":"NS"}   # EW Yellow (5s), NS Red
-    # ]),
-    # ("Group1", [
-    #     {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light":"Green", "road":"NS"},  # NS Green (30s), EW Red
-    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light":"Yellow", "road":"NS"},  # NS Yellow (5s), EW Red
-    #     {"duration": 30, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light":"Red", "road":"NS"},  # EW Green (30s), NS Red
-    #     {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road":"NS"}   # EW Yellow (5s), NS Red
-    # ])
-
-
-# # Standard NS & EW Split Timing
-
-    ("Static", [
-        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-    ]),
-
-# #Separate Phases for North and South
-    ("Group1", [
-    {"duration": 15, "str": "GGGGGrrrrrrrrrrrrrrr", "traffic_light": "Green", "road": "N"},
-    {"duration": 5, "str": "YYYYYrrrrrrrrrrrrrrr", "traffic_light": "Yellow", "road": "N"},
-    {"duration": 15, "str": "rrrrrGGGGGrrrrrrrrrr", "traffic_light": "Green", "road": "S"},
-    {"duration": 5, "str": "rrrrrYYYYYrrrrrrrrrr", "traffic_light": "Yellow", "road": "S"},
-    {"duration": 15, "str": "rrrrrrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "E"},
-    {"duration": 5, "str": "rrrrrrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "E"},
-    {"duration": 15, "str": "rrrrrrrrrrrrrrrGGGGG", "traffic_light": "Green", "road": "W"},
-    {"duration": 5, "str": "rrrrrrrrrrrrrrrYYYYY", "traffic_light": "Yellow", "road": "W"}
-     ]),
-
-# # #Dedicated Left Turns
-
-("Group2", [
-    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-    {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-]),
-
-# # #Left Turns + Protected Right Turns
-
-# ("Group3", [
-#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+# ("7", [
+#     {"duration": 4, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
 #     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#     {"duration": 10, "str": "rrGGGrrrrrrrGGGrrrrr", "traffic_light": "Protected Right", "road": "All"}
-# ]),
-
-# # #More Frequent Light Changes for High Traffic
-
-# ("Group4", [
-#     {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#     {"duration": 10, "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
-#     {"duration": 10, "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
-#     {"duration": 10, "str": "rrrrrrrrrGrrrrrrrrrr", "traffic_light": "Left Turn", "road": "E"},
-#     {"duration": 10, "str": "rrrrrrrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "W"}
-# ]),
-
-# # #Balanced Timing with Left Turns First
-# ("Group5", [
-#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 46, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
 #     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
 # ]),
 
-# # #Left Turns First, Starting with East-West
-# ("Group6", [
-#     {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#     {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#     {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#     {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
-# ])
+# ("6", [
+#     {"duration": 7, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 43, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
 
+# ("5", [
+#     {"duration": 10, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 40, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("4", [
+#     {"duration": 13, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 37, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("3", [
+#     {"duration": 16, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 34, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+#  ("2", [
+#     {"duration": 19, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 31, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("1", [
+#     {"duration": 22, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 28, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+
+
+# ("11", [
+#     {"duration": 28, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 22, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("12", [
+#     {"duration": 31, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 19, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("13", [
+#     {"duration": 34, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 16, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("13", [
+#     {"duration": 37, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 13, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("14", [
+#     {"duration": 40, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 10, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+
+# ("15", [
+#     {"duration": 43, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 7, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+# ("16", [
+#     {"duration": 46, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#     {"duration": 4, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+# ]),
+
+
+# ]
+
+# # # For 1 Min
+scenario_groups = [
+# # Standard NS & EW Split Timing
+#    ("Static", [
+#        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+#        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+#        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+#        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+#    ]),
+
+ ("Static", [
+       {"duration": 15, "str": "GGGrrrrrrrGGGrrrrrrr", "traffic_light": "Green", "road": "NS"},
+       {"duration": 5, "str": "yyyrrrrrrryyyrrrrrrr", "traffic_light": "Yellow", "road": "NS"},
+       {"duration": 5, "str": "rrrGGrrrrrrrrGGrrrrr", "traffic_light": "Green", "road": "EW"},
+       {"duration": 15, "str": "rrrrrGGGrrrrrrrGGGrr", "traffic_light": "Green", "road": "NS"},
+       {"duration": 5, "str": "rrrrryyyrrrrrrryyyrr", "traffic_light": "Yellow", "road": "NS"},
+       {"duration": 5, "str": "rrrrrrrrGGrrrrrrrrGG", "traffic_light": "Green", "road": "EW"},
+   ]),
+
+   ("Group1", [
+   {"duration": 15, "str": "GGGGGrrrrrrrrrrrrrrr", "traffic_light": "Green", "road": "N"},
+   {"duration": 5, "str": "YYYYYrrrrrrrrrrrrrrr", "traffic_light": "Yellow", "road": "N"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrrrrrr", "traffic_light": "Green", "road": "S"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrrrrrr", "traffic_light": "Yellow", "road": "S"},
+   {"duration": 15, "str": "rrrrrrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "E"},
+   {"duration": 5, "str": "rrrrrrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "E"}
+    ]),
+
+("Group2", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+("Group3", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+
+("Group4", [
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
+]),
+
+("Group5", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+
+("Group6", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
+
+("Group7", [
+   {"duration": 12, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 3,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 12, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 3,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 6,  "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
+   {"duration": 6,  "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
+   {"duration": 6,  "str": "rrrrrrrrrGrrrrrrrrrr", "traffic_light": "Left Turn", "road": "E"},
+   {"duration": 6,  "str": "rrrrrrrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "W"},
+   {"duration": 6, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
+
+
+
+("Group8", [
+   {"duration": 35, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+]),
+
+("Group9", [
+   {"duration": 7,  "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 7,  "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+]),
+
+("Group10", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+("Group11", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
+
+("Group12", [
+   {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 4, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+]),
+
+("Group13", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+("Group14", [
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+]),
+
+("Group15", [
+   {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+]),
+
+("Group16", [
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+]),
+
+("Group17", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 17, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 6, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 17, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+("Group18", [
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+
+("Group19", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+
+("Group20", [
+   {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 30, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 5, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+])
 
 ]
-
-# scenario_groups = [
-#     ("Static", [
-#         # North-South direction phases
-#         {"duration": 15, "str": "GGGGGRRRRRRRRRRRR", "traffic_light": "Green", "road": "N"},  # North Green (15s), South Red
-#         {"duration": 5,  "str": "YYYYYRRRRRRRRRRRR", "traffic_light": "Yellow", "road": "N"},  # North Yellow (5s), South Red
-#         {"duration": 15, "str": "RRRRRRRRRRRRRRRRR", "traffic_light": "Red", "road": "N"},  # North Red (15s), South Green
-
-#         # East-West direction phases
-#         {"duration": 15, "str": "RRRRRRRRRRRRRRRGGGGG", "traffic_light": "Green", "road": "E"},  # East Green (15s), West Red
-#         {"duration": 5,  "str": "RRRRRRRRRRRRRRRYYYYY", "traffic_light": "Yellow", "road": "E"},  # East Yellow (5s), West Red
-#         {"duration": 15, "str": "RRRRRRRRRRRRRRRRR", "traffic_light": "Red", "road": "E"},  # East Red (15s), West Green
-#     ])
-# ]
 
 
 
@@ -192,7 +377,7 @@ def set_traffic_lights(scenarios):
 
 
 
-def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval, group_id, video_index, inject):
+def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_durations, change_interval, group_id, video_index, inject, cropping_time_in_minutes):
     """
     Run the simulation with dynamic phase changes at each interval.
     
@@ -201,12 +386,32 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     :param phase_durations: List of tuples [(green_duration, yellow_duration, red_duration), ...]
     :param change_interval: How often to change the traffic light phases (in steps).
     """
-    print("Video ------------------------------>>>>>>>>>", video_index)
     dynamic_value = f"Video_{video_index}"  # Replace with your dynamic value
-    # sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/Bellevue_116th_NE12th_2017-09-11_14-08-35_{dynamic_value}/sumo_config.sumocfg"
-    sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_14-08-35_Cropped/{dynamic_value}/sumo_config.sumocfg"
+    sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/sumo_configuration_files/Synthesized-1/{cropping_time_in_minutes}Min/{dynamic_value}/sumo_config.sumocfg"
 
-    traci.start([sumo_binary, "-c", sumo_config_file])
+    max_retries = 5
+    retry_delay = 1  # seconds
+    scale_factor = 3
+
+    def kill_sumo():
+        os.system("pkill -f sumo")
+
+    for attempt in range(max_retries):
+        try:
+            print(f"Starting SUMO, attempt {attempt + 1}/{max_retries}")
+            kill_sumo()  # Kill any previous stuck SUMO instance
+            time.sleep(1)
+            traci.start([sumo_binary, "-c", sumo_config_file])
+            traci.simulation.setScale(scale_factor)
+            
+            break  # Exit loop if successful
+        except Exception as e:
+            print(f"Error: {e}")
+            print(f"Retrying in {retry_delay} seconds...")
+            time.sleep(retry_delay)
+    else:
+        print("Failed to start SUMO after multiple attempts.")
+
     change = False
     current_step = 0
     interval_index = 0  # Start with the first phase configuration
@@ -215,7 +420,7 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     global vehiclesToWest, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehicle_time_tracking, remaining_vehicle, green_light_vehicle_counts, vehiclesToEast, vehiclesToNorth, vehiclesToSouth, vehiclesToWest 
     green_light_vehicle_counts = {}
     vehiclesToWestAll = set()
-    vehiclesToEastAll = set()
+    # vehiclesToEastAll = set()
     vehiclesToNorthAll = set()
     vehiclesToSouthAll = set()
     vehiclesToEast = set()
@@ -226,38 +431,27 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     set_traffic_lights(phase_durations)
 
     if inject:
-        inject_remaining_vehicles()
+        inject_remaining_vehicles(video_index, group_id)
    
     traffic_flow = {}
     veh_time = {}
     idx_count = 0
+    
     while current_step <= change_interval:
-        if current_step == change_interval:
-            print("Done with 60 seconds ---- Run next scenario ")
-            # print("traffic")
-            # print(traffic_flow)
-            # print("time")
-            # print(veh_time)
-
-            print("Getting the vehicle information: ")
-            get_vehicle_information()
-            # print("Remaining...", remaining_vehicles)
-            print("Len -------->>>", len(remaining_vehicles))
-
-
-
-            
         traci.simulationStep()
         traffic_flow = get_veh_count(interval_index-1, current_step, idx_count)
         veh_time = get_veh_time(interval_index-1, current_step, idx_count, change, group_id)
 
-        
-        
         change = False  
         
         current_step += 1
-    print("Returning..")
-    
+
+    if current_step == change_interval + 1:
+        print(f"Done with {change_interval} seconds ---- Run next scenario ")
+        print("Getting the vehicle information: ")
+        get_vehicle_information(video_index, group_id)
+        vehiclesToEastAll = set()
+
     traci.close()
     return traffic_flow, veh_time
 
@@ -270,31 +464,17 @@ def get_veh_count(interval_index, step, idx_count):
         for vehicle_id in vehicle_ids:
             lane_id = traci.vehicle.getLaneID(vehicle_id)
 
-            if lane_id == "center_to_east_0" or lane_id == "center_to_east_1":
-                if vehicle_id not in vehiclesToEastAll:
+            if vehicle_id not in vehiclesToEastAll and vehicle_id not in vehiclesToWestAll and vehicle_id not in vehiclesToNorthAll and vehicle_id not in vehiclesToSouthAll:
+                if lane_id.startswith(":center_") or lane_id.startswith("center_to_"):
                     vehiclesToEastAll.add(vehicle_id)
-                    vehiclesToEast.add(vehicle_id)
-
-            if lane_id == "center_to_west_0" or lane_id == "center_to_west_1":
-                if vehicle_id not in vehiclesToWestAll:
-                    vehiclesToWestAll.add(vehicle_id)
-                    vehiclesToWest.add(vehicle_id)
-
-            if lane_id == "center_to_north_0" or lane_id == "center_to_north_1":
-                if vehicle_id not in vehiclesToNorthAll:
-                    vehiclesToNorthAll.add(vehicle_id)
-                    vehiclesToNorth.add(vehicle_id)
-
-            if lane_id == "center_to_south_0" or lane_id == "center_to_south_1":
-                if vehicle_id not in vehiclesToSouthAll:
-                    vehiclesToSouthAll.add(vehicle_id)
-                    vehiclesToSouth.add(vehicle_id)
+                    vehiclesToEast.add(vehicle_id)  
 
         # Get the final vehicle counts after processing the junction
         current_green_count_WTOE = len(vehiclesToEast)
         current_green_count_ETOW = len(vehiclesToWest)
         current_green_count_TON = len(vehiclesToNorth)
         current_green_count_TOS = len(vehiclesToSouth)
+
 
         # Print debug info for vehicle counts
         # print(f"Total vehicles passed from West to East: {current_green_count_WTOE}, Interval index: {interval_index}")
@@ -331,9 +511,7 @@ def get_veh_time(interval_index, step, idx_count, phase_change, group_id):
                 if "captured" not in vehicle_time_tracking[veh]: 
                     vehicle_time_tracking[veh]["end"] = step 
                     vehicle_time_tracking[veh]["captured"] = True
-                    # vehicle_time_tracking[veh]["traffic_scenario"]= idx_count
 
-                    # print(f"Vehicle {veh} left at step {step}")
 
     for vehicle_id in vehicle_ids:
         vehicle_position = traci.vehicle.getPosition(vehicle_id)
@@ -353,7 +531,6 @@ def get_veh_time(interval_index, step, idx_count, phase_change, group_id):
     return vehicle_time_tracking
 
 def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group_id):
-    # print("Savving data..?")
     global scenario_stats
     scenario_time_stats = {}
 
@@ -361,7 +538,6 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
     for vehicle_data in veh_time.values():
         if "traffic_scenario" in vehicle_data and "end" in vehicle_data:
             traffic_scenario = vehicle_data['traffic_scenario']  
-            # print("Traffic Scenario: ", traffic_scenario)
             
             if traffic_scenario not in scenario_time_stats:
                 scenario_time_stats[traffic_scenario] = {'total_time': 0, 'vehicle_count': 0}
@@ -382,8 +558,6 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
 
         average_time = average_time_per_scenario.get(x, 0)
 
-        # print("Traffic flow Data", traffic_flow_data)
-
         # Calculate throughput for the current row
         throughput = traffic_flow_data[x]["west_to_east"]
         throughput += traffic_flow_data[x]["east_to_west"]
@@ -398,27 +572,20 @@ def save_avg_and_throughput_to_csv(traffic_flow_data, veh_time, scenarios, group
             'group_id': group_id,
             'scenario_id': scenario_id,
             'idx_count':x,
-            # "scenario_time_description": get_light_durations_from_scenario(scenario_description)
         }
 
 
-        print("stats", scenario_stats)
-
-        # print(f"{x}+{group_id}")
-
 def get_light_durations_from_scenario(phase):
         
-        print("scenario desc", phase)
-    
-        phase_state = phase["str"]  # Example: "GGGrrrrrrrGGGrrrrrrr"
-        phase_duration = phase["duration"]  # Duration of this phase
+        phase_state = phase["str"]
+        phase_duration = phase["duration"]  
 
         # Count occurrences of each light state
         green_count = phase_state.count("G")
         yellow_count = phase_state.count("Y")
         red_count = phase_state.count("r")
 
-        total_lights = len(phase_state)  # Total traffic lights controlled
+        total_lights = len(phase_state)  
 
         # Calculate actual time for each color
         green_time = (green_count / total_lights) * phase_duration
@@ -430,8 +597,10 @@ def get_light_durations_from_scenario(phase):
         return scenario_desc
 
 
-def run_all_scenarios(scenario_groups, video_index):
-    inject = False
+prev_video_index = 1
+def run_all_scenarios(scenario_groups, video_index, cropping_time_in_minutes, inject):
+    
+
     global vehiclesToWestAll, vehiclesToEastAll, vehiclesToSouthAll, vehiclesToNorthAll, green_light_vehicle_counts
     total_simulation_steps = 5000  # e.g., run for 600 steps (10 minutes)
     change_interval = 60 
@@ -440,9 +609,9 @@ def run_all_scenarios(scenario_groups, video_index):
         green_light_vehicle_counts = {}
         group_id = scenario_group[0]
         scenario_group =  scenario_group[1]
+
         # Run the simulation with dynamic phase changes
-        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval, group_id, video_index, inject)
-        # print("Vehicle time: ", veh_time)
+        traffic_flow, veh_time = run_scenario_with_dynamic_lights("center", total_simulation_steps, scenario_group, change_interval, group_id, video_index, inject, cropping_time_in_minutes)
 
         save_avg_and_throughput_to_csv(traffic_flow, veh_time, scenario_group, group_id)
         vehiclesToWestAll = set()
@@ -450,56 +619,61 @@ def run_all_scenarios(scenario_groups, video_index):
         vehiclesToNorthAll = set()
         vehiclesToSouthAll = set()
 
-        inject = True
 
 
-def get_vehicle_information():
+def get_vehicle_information(video_index, group_id):
+    global vehiclesToEastAll
+    data = {}
     global remaining_vehicles
     vehicle_ids = traci.vehicle.getIDList()
-    for vehicle_id in vehicle_ids:
-        speed = traci.vehicle.getSpeed(vehicle_id)
-        position = traci.vehicle.getPosition(vehicle_id)
-        route_id = traci.vehicle.getRouteID(vehicle_id)
-        lane_id = traci.vehicle.getLaneID(vehicle_id)
-        edge_id = traci.vehicle.getRoadID(vehicle_id)
-        lane_index = traci.vehicle.getLaneIndex(vehicle_id)
-        pos = traci.vehicle.getLanePosition(vehicle_id)
-
-        remaining_vehicles[vehicle_id] = {
-            "speed": speed,
-            "position": position,
-            "route_id": route_id,
-            "lane_id": lane_id,
-            "edge_id": edge_id,
-            "lane_index":lane_index,
-            "lane_position": pos,
-        }
-
-    # return remaining_vehicles
-
-
-def inject_remaining_vehicles():
-    global remaining_vehicles
-    for vehicle_id, data in remaining_vehicles.items():
-        vehicle_id = f"old_+{vehicle_id}"
-        # edge_id, lane, pos = traci.simulation.convertRoadPosition(data["position"][0], data["position"][1])
-        # print("vehicle and route", vehicle_id, data["route_id"])
-        traci.vehicle.add(vehID=vehicle_id, routeID=data["route_id"], departPos=str(data["lane_position"]), departSpeed=str(data["speed"]))
-        traci.vehicle.moveToXY(vehID=vehicle_id, edgeID=data["edge_id"], laneIndex=data["lane_index"], x=data["position"][0], y=data["position"][1])
-        # traci.vehicle.setSpeed(vehID=vehicle_id, speed=data["speed"])
     
-    remaining_vehicles = {}
+    
+    for vehicle_id in vehicle_ids:
+        if vehicle_id not in vehiclesToEastAll:
+            speed = traci.vehicle.getSpeed(vehicle_id)
+            position = traci.vehicle.getPosition(vehicle_id)
+            route_id = traci.vehicle.getRouteID(vehicle_id)
+            lane_id = traci.vehicle.getLaneID(vehicle_id)
+            edge_id = traci.vehicle.getRoadID(vehicle_id)
+            lane_index = traci.vehicle.getLaneIndex(vehicle_id)
+            pos = traci.vehicle.getLanePosition(vehicle_id)
+            if lane_id != "center_to_east_0" and lane_id != "center_to_east_1" and lane_id != "center_to_west_0" and lane_id != "center_to_west_1" and lane_id != "center_to_north_0" and lane_id != "center_to_north_1" and lane_id != "center_to_south_0" and lane_id != "center_to_south_1":
+                data[vehicle_id] = {
+                    "speed": speed,
+                    "position": position,
+                    "route_id": route_id,
+                    "lane_id": lane_id,
+                    "edge_id": edge_id,
+                    "lane_index":lane_index,
+                    "lane_position": pos,
+                }
+
+                remaining_vehicles[group_id] = data
+
+
+def inject_remaining_vehicles(video_index, group_id):
+    global remaining_vehicles
+    if group_id in remaining_vehicles:
+        for vehicle_id, data in remaining_vehicles[group_id].items():
+            vehicle_id = f"old_+{vehicle_id}"
+            traci.vehicle.add(vehID=vehicle_id, routeID=data["route_id"], departPos=str(data["lane_position"]), departSpeed=str(data["speed"]))
+            traci.vehicle.moveToXY(vehID=vehicle_id, edgeID=data["edge_id"], laneIndex=data["lane_index"], x=data["position"][0], y=data["position"][1])
+        del remaining_vehicles[group_id]
+
 
 if __name__ == "__main__":
     throughput_final = []
     time_final = []
-    total_simulation_steps = 600  # e.g., run for 600 steps (10 minutes)
-    change_interval = 60  # Change the traffic light phases every 50 steps
+    total_simulation_steps = 600  
+    change_interval = 60  
+    cropping_time_in_minutes = 1
+    inject = False
 
-    for i in range(1):
-        run_all_scenarios(scenario_groups, i + 1)
 
-        path = f"files/full/{file_name}_{i}.csv"
+    for i in range(60):
+        run_all_scenarios(scenario_groups, i + 1, cropping_time_in_minutes, inject)
+
+        path = f"files/Synthesized-1/new/full_{cropping_time_in_minutes}/{file_name}_{i}.csv"
         with open(path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description' ,'Average_Travel_Time', 'Throughput', 'Idx_Count'])
@@ -518,23 +692,13 @@ if __name__ == "__main__":
         throughput_final.append(best_throughout)
         time_final.append(best_time)
 
-        # print("Video index..", i)
-        # print("Best dataframe:")
-        # print(best_throughout)
-        # print(best_time)
-
-        # TODO: Append the best throughput and time -> Get the final one with best throughput and time for each time interval video
-        # OR can just save different files for diff cropped videos
+        inject = True
 
     final_df_throughput = pd.concat(throughput_final, ignore_index=True)
     final_df_time = pd.concat(time_final, ignore_index=True)
 
-    # Print the properly merged DataFrames
-    print(final_df_throughput)
-    print(final_df_time)
-
     # Save to a CSV file
-    folder_path = 'best_scenarios/full'  
+    folder_path = 'best_scenarios/updated'  
     final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name}.csv', index=False)
     final_df_time.to_csv(f'{folder_path}/best_time_{file_name}.csv', index=False)
 
