@@ -1,0 +1,2 @@
+Scenario_ID,Group_ID,Scenario_Description,Average_Travel_Time,Throughput,Idx_Count
+0,Static,"[{'duration': 75, 'str': 'GGGGGrrrrrGGGGGrrrrr', 'traffic_light': 'Green', 'road': 'NS'}, {'duration': 15, 'str': 'YYYYYrrrrrYYYYYrrrrr', 'traffic_light': 'Yellow', 'road': 'NS'}, {'duration': 75, 'str': 'rrrrrGGGGGrrrrrGGGGG', 'traffic_light': 'Green', 'road': 'EW'}, {'duration': 15, 'str': 'rrrrrYYYYYrrrrrYYYYY', 'traffic_light': 'Yellow', 'road': 'EW'}]",62.0,146,0
