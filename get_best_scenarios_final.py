@@ -92,8 +92,8 @@ time_final = []
 
 
 for i in range(2):
-    file_name = "Bellevue_150th_Newport__2017-09-11_17-08-32_6Min_Data_Upscaled_New"
-    path = f"files/Bellevue_150th_Newport__2017-09-11_17-08-32/new/full_6/{file_name}_{i}.csv"
+    file_name = "Bellevue_116th_NE12th__2017-09-11_14-08-35_6Min_Data"
+    path = f"files/Bellevue_116th_NE12th__2017-09-11_14-08-35/new/full_6/{file_name}_{i}.csv"
         
 
     # Get the best scenario, throughput and time for each cropped video
@@ -117,13 +117,16 @@ for i in range(2):
     print("Average Time (excluding Static):", avg_time)
 
     # Save to a CSV file
-    folder_path = 'best_scenarios/Bellevue_150th_Newport__2017-09-11_17-08-32/new/full_6'
+    folder_path = 'best_scenarios/Bellevue_116th_NE12th__2017-09-11_14-08-35/new/full_6'
 
-    final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name}.csv', index=False)
-    final_df_time.to_csv(f'{folder_path}/best_time_{file_name}.csv', index=False)
+    file_name_output = "Bellevue_116th_NE12th__2017-09-11_14-08-35_6Min_Data_Proactive"
+    final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name_output}.csv', index=False)
+    final_df_time.to_csv(f'{folder_path}/best_time_{file_name_output}.csv', index=False)
 
     # Save sum and avg to a separate file
     summary_data = pd.DataFrame({'Metric': ['Sum Throughput', 'Avg Time'], 'Value': [sum_throughput, avg_time]})
-    summary_data.to_csv(f'{folder_path}/summary_metrics_{file_name}.csv', index=False)
+    summary_data.to_csv(f'{folder_path}/summary_metrics_{file_name_output}.csv', index=False)
+
+    # print(summary_data)
 
     print("File saved successfully.")

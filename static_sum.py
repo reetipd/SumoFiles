@@ -13,9 +13,9 @@ def process_throughput(file, prev_max_throughput=0, prev_avg_travel_time=0):
 
 # Example usage
 max_throughput, avg_travel_time = 0, 0
-for i in range(3):
-    file_name = "Bellevue_116th_NE12th__2017-09-11_14-08-35_4Min_Data_Scaled_2X"
-    path = f"files/Bellevue_116th_NE12th__2017-09-11_14-08-35/new/full_4/{file_name}_{i}.csv"
+for i in range(2):
+    file_name = "Bellevue_116th_NE12th__2017-09-11_09-08-31_6Min_Data"
+    path = f"files/Bellevue_116th_NE12th__2017-09-11_09-08-31/new/full_6/{file_name}_{i}.csv"
     max_throughput, avg_travel_time = process_throughput(
         path, max_throughput, avg_travel_time
     )

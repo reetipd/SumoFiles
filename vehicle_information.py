@@ -45,14 +45,6 @@ while step < 1000:
         print(f"Phase Name: {phase_name}")
         print()
 
-        # if lane_id == "north_to_center_0":
-        #     # print(f"Vehicle {vehicle_id} lane {lane_id}")
-        #     total_vehicle_from_north_to_center.add(vehicle_id)
-        #     print()
-        # elif lane_id == "south_to_center_0":
-        #     # print(f"Vehicle {vehicle_id} lane {lane_id}")
-        #     total_vehicle_from_center_to_north.add(vehicle_id)
-    
     step += 1
 
 print(f"Vehicle Count From North to Center: {len(total_vehicle_from_north_to_center)}")
