@@ -403,7 +403,7 @@ def run_scenario_with_dynamic_lights(junction_id, total_simulation_steps, phase_
     )
 
     print("Using SUMO config:", sumo_config_file)
-    
+
     max_retries = 5
     retry_delay = 1  # seconds
     scale_factor = 1
@@ -692,7 +692,13 @@ if __name__ == "__main__":
     for i in range(60):
         run_all_scenarios(scenario_groups, i + 1, cropping_time_in_minutes, inject)
 
-        path = f"files/new/full_{cropping_time_in_minutes}/{file_name}_{i}.csv"
+        directory = f"files/results/{cropping_time_in_minutes}_Min"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+            # Save results for this iteration
+        path = f"{directory}/{file_name}_{i}.csv"
+
         with open(path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Scenario_ID', 'Group_ID', 'Scenario_Description' ,'Average_Travel_Time', 'Throughput', 'Idx_Count'])

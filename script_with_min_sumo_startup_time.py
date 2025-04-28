@@ -132,7 +132,18 @@ class TrafficSimulator:
 
         # Actual config file loaction to run
         dynamic_value = f"Video_{video_index}"  # Replace with your dynamic value
-        sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/sumo_configuration_files/Bellevue_116th_NE12th__2017-09-10_19-08-25/{cropping_time_in_minutes}Min/{dynamic_value}/sumo_config.sumocfg"
+        # sumo_config_file = fr"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/sumo_configuration_files/Bellevue_116th_NE12th__2017-09-10_19-08-25/{cropping_time_in_minutes}Min/{dynamic_value}/sumo_config.sumocfg"
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        sumo_config_file = os.path.join(
+            base_dir,
+            "sumo_configuration_files",
+            "Bellevue_116th_NE12th__2017-09-10_19-08-25",
+            f"{cropping_time_in_minutes}Min",
+            f"Video_{video_index}",
+            "sumo_config.sumocfg"
+        )
 
         # Load the new config file for simualtion (Resetting the simulation)
         self.reset_simulation(sumo_config_file)
@@ -700,8 +711,21 @@ def main():
             traci.simulationStep()
         print("SUMO initialized.")
 
-        # Check if the route file is ready or not (For later, we might need to give list of route files locations and loop to check for each route files after processing the previous route file)
-        route_file = "/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files copy/sumo_configuration_files/Bellevue_116th_NE12th__2017-09-10_19-08-25/1Min/Video_1/route.rou.xml"
+
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        route_file = os.path.join(
+            base_dir,
+            "sumo_configuration_files",
+            "Bellevue_116th_NE12th__2017-09-10_19-08-25",
+            f"1Min",
+            f"Video_1",
+            "route.rou.xml"
+        )
+
+        print("Using SUMO config:", route_file)
+        # # Check if the route file is ready or not (For later, we might need to give list of route files locations and loop to check for each route files after processing the previous route file)
+        # route_file = "/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files copy/sumo_configuration_files/Bellevue_116th_NE12th__2017-09-10_19-08-25/1Min/Video_1/route.rou.xml"
         print("Waiting for route file to be ready...")
         while not simulator.is_route_file_ready(route_file):
             print("Route file not ready. Waiting...")
