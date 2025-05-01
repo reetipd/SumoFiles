@@ -1,9 +1,15 @@
-
-
 import pandas as pd
+import argparse
+import os
+
+parser = argparse.ArgumentParser(description='Analyze traffic data with configurable file parameters')
+parser.add_argument('--folder_path', type=str, help='Directory path containing the CSV files')
+parser.add_argument('--file_name', type=str, help='Base name of the CSV files (without _X.csv)')
+parser.add_argument('--num_files', type=int, help='Number of intervals to process')
+args = parser.parse_args()
 
 decision= "Static"
-def analyze_trend(path, i, interval, past_scenarios=None, past_throughputs_max=None, make_decision_after=3):
+def find_data(path, i, interval, past_scenarios=None, past_throughputs_max=None, make_decision_after=3):
     global decision
     """
     Analyzes the trend from the CSV file at the given path and makes a decision on the next scenario.
@@ -170,18 +176,27 @@ decision = 'Static'
 total_throughput = 0
 total_time = 0
 
-for i in range(4):  # Assuming 12 intervals
-    file_name = "Bellevue_116th_NE12th__2017-09-11_14-08-35_3Min_Data_Scaled_2X"
-    path = f"files/Bellevue_116th_NE12th__2017-09-11_14-08-35/new/full_3/{file_name}_{i}.csv"
-    throughput, time = analyze_trend(
-        path, i, 2, past_scenarios, past_throughputs_max, 2
+folder_path = args.folder_path 
+file_name = args.file_name 
+num_files = args.num_files 
+
+print(f"Processing {num_files} intervals with file name {file_name} at path {folder_path}")
+
+for i in range(num_files):
+    path = os.path.join(folder_path, f"{file_name}_{i}.csv")
+    make_decision_after = 2
+    cycle_time = 2
+    throughput, time = find_data(
+        path, i, cycle_time, past_scenarios, past_throughputs_max, make_decision_after
     )
 
+    print(f"Interval {i}: Chosen throughput {throughput}")
     print("Choesen throughput", throughput)
 
     total_throughput += throughput
+
     total_time += time
 
-print("Total Throughput: ", total_throughput)
-time = total_time/12
-print("Time is", time)
+print("Total throughput:", total_throughput)
+avg_time = total_time / num_files
+print(f"Average Travel Time: {avg_time}")

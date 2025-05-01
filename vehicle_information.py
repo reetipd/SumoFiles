@@ -1,11 +1,9 @@
 import traci
 from traci import simulation
 
-sumo_binary = "sumo-gui" 
-# sumo_config_file = r"C:\Users\c00563648\OneDrive - University of Louisiana at Lafayette\Documents\GRA\Traffic\Sumo-Files\SumoFiles\Bellevue_116th_NE12th__2017-09-11_07-08-32\sumo_files\sumo_config.sumocfg"
-# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_07-08-32/sumo_files/sumo_config.sumocfg"
-# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_14-08-35_East_West/sumo_config.sumocfg"
-sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Cropped_Videos/sumo_files/sumo_config.sumocfg"
+sumo_binary = "sumo-gui"
+# Path to sumo config file 
+sumo_config_file = r""
 
 # Start the simulation
 traci.start([sumo_binary, "-c", sumo_config_file])

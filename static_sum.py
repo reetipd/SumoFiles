@@ -1,5 +1,12 @@
 import pandas as pd
 import os
+import argparse
+
+parser = argparse.ArgumentParser(description='Analyze traffic data with configurable file parameters')
+parser.add_argument('--folder_path', type=str, help='Directory path containing the CSV files')
+parser.add_argument('--file_name', type=str, help='Base name of the CSV files (without _X.csv)')
+parser.add_argument('--num_files', type=int, help='Number of intervals to process')
+args = parser.parse_args()
 
 def process_throughput(file, prev_max_throughput=0, prev_avg_travel_time=0):
     df = pd.read_csv(file)
@@ -13,9 +20,15 @@ def process_throughput(file, prev_max_throughput=0, prev_avg_travel_time=0):
 
 # Example usage
 max_throughput, avg_travel_time = 0, 0
-for i in range(2):
-    file_name = "Bellevue_116th_NE12th__2017-09-11_09-08-31_6Min_Data"
-    path = f"files/Bellevue_116th_NE12th__2017-09-11_09-08-31/new/full_6/{file_name}_{i}.csv"
+
+folder_path = args.folder_path 
+file_name = args.file_name 
+num_files = args.num_files 
+
+print(f"Processing {num_files} intervals with file name {file_name} at path {folder_path}")
+
+for i in range(num_files):
+    path = os.path.join(folder_path, f"{file_name}_{i}.csv")
     max_throughput, avg_travel_time = process_throughput(
         path, max_throughput, avg_travel_time
     )

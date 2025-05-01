@@ -10,139 +10,11 @@ import pandas as pd
 import time
 
 sumo_binary = "sumo"
-# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th_2017-09-11_14-08-35_Full/sumo_config.sumocfg"
-# sumo_config_file = r"/Users/ull/Documents/GRA/TRAFFIC-Project/SUMO Files/Bellevue_116th_NE12th__2017-09-11_08-08-50_Full/sumo_config.sumocfg"
 
 file_name = "Synthesized_1Min"
 
-# scenario_groups = [
-# # ("Static", [
-# #     {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-# #     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-# #     {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# # ]),
-
-# ("Static", [
-#        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-#    ]),
-
-# ("7", [
-#     {"duration": 4, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 46, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("6", [
-#     {"duration": 7, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 43, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("5", [
-#     {"duration": 10, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 40, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("4", [
-#     {"duration": 13, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 37, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("3", [
-#     {"duration": 16, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 34, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-#  ("2", [
-#     {"duration": 19, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 31, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("1", [
-#     {"duration": 22, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 28, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-
-
-# ("11", [
-#     {"duration": 28, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 22, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("12", [
-#     {"duration": 31, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 19, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("13", [
-#     {"duration": 34, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 16, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("13", [
-#     {"duration": 37, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 13, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("14", [
-#     {"duration": 40, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 10, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-
-# ("15", [
-#     {"duration": 43, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 7, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-# ("16", [
-#     {"duration": 46, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#     {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#     {"duration": 4, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#     {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
-
-
-# ]
-
 # # # For 1 Min
 scenario_groups = [
-# # Standard NS & EW Split Timing
-#    ("Static", [
-#        {"duration": 30, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#        {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#        {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#        {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-#    ]),
-
  ("Static", [
        {"duration": 15, "str": "GGGrrrrrrrGGGrrrrrrr", "traffic_light": "Green", "road": "NS"},
        {"duration": 5, "str": "yyyrrrrrrryyyrrrrrrr", "traffic_light": "Yellow", "road": "NS"},
@@ -160,174 +32,173 @@ scenario_groups = [
    {"duration": 15, "str": "rrrrrrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "E"},
    {"duration": 5, "str": "rrrrrrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "E"}
     ])
-    # ,
+    ,
 
-# ("Group2", [
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# ]),
+("Group2", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
 
-# ("Group3", [
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# ]),
-
-
-# ("Group4", [
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
-# ]),
-
-# ("Group5", [
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# ]),
+("Group3", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
 
 
-# ("Group6", [
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-# ]),
+("Group4", [
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
+]),
 
-# ("Group7", [
-#    {"duration": 12, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 3,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 12, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 3,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 6,  "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
-#    {"duration": 6,  "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
-#    {"duration": 6,  "str": "rrrrrrrrrGrrrrrrrrrr", "traffic_light": "Left Turn", "road": "E"},
-#    {"duration": 6,  "str": "rrrrrrrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "W"},
-#    {"duration": 6, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-# ]),
+("Group5", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
 
 
+("Group6", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
 
-# ("Group8", [
-#    {"duration": 35, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
+("Group7", [
+   {"duration": 12, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 3,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 12, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 3,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 6,  "str": "Grrrrrrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "N"},
+   {"duration": 6,  "str": "rrrrrGrrrrrrrrrrrrrr", "traffic_light": "Left Turn", "road": "S"},
+   {"duration": 6,  "str": "rrrrrrrrrGrrrrrrrrrr", "traffic_light": "Left Turn", "road": "E"},
+   {"duration": 6,  "str": "rrrrrrrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "W"},
+   {"duration": 6, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
 
-# ("Group9", [
-#    {"duration": 7,  "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 7,  "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
-# ]),
 
-# ("Group10", [
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
-# ]),
-# ("Group11", [
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-# ]),
 
-# ("Group12", [
-#    {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 4, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-# ]),
+("Group8", [
+   {"duration": 35, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+]),
 
-# ("Group13", [
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# ]),
+("Group9", [
+   {"duration": 7,  "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 7,  "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"}
+]),
 
-# ("Group14", [
-#    {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-# ]),
+("Group10", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5,  "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5,  "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+("Group11", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+]),
 
-# ("Group15", [
-#    {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-# ]),
+("Group12", [
+   {"duration": 18, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 18, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 4, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+]),
 
-# ("Group16", [
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-# ]),
+("Group13", [
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
 
-# ("Group17", [
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 17, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 6, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 17, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-# ]),
+("Group14", [
+   {"duration": 20, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 20, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+]),
 
-# ("Group18", [
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
-# ]),
+("Group15", [
+   {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 25, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+]),
 
-# ("Group19", [
-#    {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-#    {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
-# ]),
+("Group16", [
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+]),
 
-# ("Group20", [
-#    {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
-#    {"duration": 30, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
-#    {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
-#    {"duration": 5, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
-#    {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
-# ])
+("Group17", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 17, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 6, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 17, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+]),
+
+("Group18", [
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 25, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+
+("Group19", [
+   {"duration": 10, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 10, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 15, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+   {"duration": 5, "str": "YYYYYrrrrrYYYYYrrrrr", "traffic_light": "Yellow", "road": "NS"}
+]),
+
+("Group20", [
+   {"duration": 5, "str": "rrrrrGrrrrrrrrrGrrrr", "traffic_light": "Left Turn", "road": "EW"},
+   {"duration": 30, "str": "rrrrrGGGGGrrrrrGGGGG", "traffic_light": "Green", "road": "EW"},
+   {"duration": 5, "str": "rrrrrYYYYYrrrrrYYYYY", "traffic_light": "Yellow", "road": "EW"},
+   {"duration": 5, "str": "GrrrrrrrrrGrrrrrrrrr", "traffic_light": "Left Turn", "road": "NS"},
+   {"duration": 15, "str": "GGGGGrrrrrGGGGGrrrrr", "traffic_light": "Green", "road": "NS"},
+])
 
 ]
-
 
 
 total_vehicle_from_west_to_center = set()
@@ -724,6 +595,10 @@ if __name__ == "__main__":
 
     # Save to a CSV file
     folder_path = 'best_scenarios/updated'  
+
+    if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
     final_df_throughput.to_csv(f'{folder_path}/best_throughput_{file_name}.csv', index=False)
     final_df_time.to_csv(f'{folder_path}/best_time_{file_name}.csv', index=False)
 

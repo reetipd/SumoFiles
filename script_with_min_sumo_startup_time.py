@@ -484,6 +484,10 @@ class TrafficSimulator:
 
         # Save to CSV files
         folder_path = 'best_scenarios/updated'  
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
         final_df_throughput.to_csv(f'{folder_path}/best_throughput_{self.file_name}.csv', index=False)
         final_df_time.to_csv(f'{folder_path}/best_time_{self.file_name}.csv', index=False)
 
