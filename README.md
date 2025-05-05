@@ -175,7 +175,7 @@ Each scenario requires:
   - "road": Direction (NS, EW, etc.)
 
 
-To use SUMO GUI, use the `sumo_binary=sumo-gui` else `sumo_binary=sumo`. While using the GUI case, we need to close the SUMO and re-run it ourself all the time. But, using non-GUI version, it works by itself (no manual inervention).
+To use SUMO GUI, use the `sumo_binary=sumo-gui` else `sumo_binary=sumo`. While using the GUI case, we need to close the SUMO and re-run it ourself all the time. But, using non-GUI version, it works by itself (no manual intervention).
 
 ## Troubleshooting
 
